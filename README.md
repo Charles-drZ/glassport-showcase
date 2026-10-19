@@ -2,9 +2,9 @@
 
 **A native macOS workspace for local and remote development environments.**
 
-GlassPort is a workspace-first developer tool: instead of organizing work around disconnected terminal windows and SSH connections, it groups local shells, remote systems, sessions, and project context around the workspace they belong to.
+GlassPort is a workspace-first developer tool. Instead of organizing work around disconnected terminal windows and SSH connections, it groups local shells, remote systems, tabs, live terminal sessions and project context around the workspace they belong to.
 
-The first product goal is practical: replace my own Royal TSX local + SSH workflow with a native macOS tool that is simpler, more integrated, and designed around real daily development work.
+The practical product goal is still the same: replace a fragmented Royal TSX + Terminal workflow with a native macOS tool that is simpler, more coherent, and designed around real daily development work.
 
 ## Product model
 
@@ -14,72 +14,123 @@ Workspace
  │    └─ Session
  ├─ SSH Port
  │    └─ Session
- └─ future workspace-specific actions
+ └─ tabs / optional companion pane
 ```
 
-A Port describes an execution environment. A Session is a running terminal instance attached to a Port. A Port does **not** imply that a process is already running.
+A **Port** describes an execution environment. A **Session** is a running terminal process attached to a Port. Durable workspace intent stays separate from ephemeral PTYs, PIDs and live process state.
 
-That distinction matters for lifecycle, persistence, lazy SSH startup, process cleanup, and future workspace composition.
+That distinction drives restore behavior, lazy SSH startup, process cleanup, persistence and future workspace composition.
 
-## Validated engineering foundation
+## Current accepted product state
 
-The current merged foundation includes:
+The merged and physically accepted product now includes:
 
-- native macOS application shell using AppKit;
-- SwiftTerm terminal integration;
-- a real local `/bin/zsh -l` session over PTY;
-- correct terminal resize and native keyboard/edit behavior;
-- clean PTY/process shutdown;
-- explicit Session lifecycle and restart behavior after natural shell exit;
-- SSH as a first-class Port using the system `/usr/bin/ssh` client;
-- lazy SSH Session creation on first selection;
-- preservation of live Sessions while switching between Ports;
-- concrete host-alias discovery from `~/.ssh/config`;
-- system OpenSSH remaining authoritative for authentication, host keys, agent behavior, ProxyJump, and option resolution;
-- durable local Workspace persistence with atomic writes and corruption-safe fallback;
-- create, rename, switch, and delete Workspace flows;
-- explicit separation between durable Workspace metadata and ephemeral runtime Session/PTY state.
+- a native AppKit application shell;
+- SwiftTerm terminal rendering;
+- real local `/bin/zsh -l` sessions over PTY;
+- system `/usr/bin/ssh` as the SSH implementation;
+- concrete SSH alias discovery from the user's OpenSSH config;
+- native terminal tabs;
+- explicit Session end/restart lifecycle;
+- Workspace create / rename / switch / delete;
+- durable Workspace identity and selection;
+- **one optional right-side companion terminal pane** with independent live Session/PTY;
+- native draggable split divider;
+- per-session Local Shell launch working directory;
+- **Restart in Folder…** without injecting `cd` into a running shell;
+- working-directory inheritance for new Local sessions and the companion pane;
+- durable restoration of tab order, active tab, pane identity, Port intent and Local launch directory;
+- safe cleanup when a previously saved SSH alias no longer exists;
+- a restrained Local Shell terminal environment with `TERM=xterm-256color`, truecolor capability and user-setting/NO_COLOR preservation;
+- Light/Dark-safe terminal selection colors;
+- a dedicated GlassPort Dock icon and in-product portal identity.
 
-The merged GLP-006 state passed `swift build`, `swift test`, and a native Xcode macOS build with 61 tests. Earlier terminal and SSH milestones also passed physical-product smoke testing, including a real interactive SSH connection.
+The important part is not only that these features compile: the GLP-010 through GLP-014 product slices were accepted after native macOS build/test and physical-product review.
 
-A visual-shell refinement is currently in active review and is not presented here as merged product state.
+## Companion pane, not a generic tiling terminal
 
-## Engineering decisions
+GlassPort deliberately rejected an unrestricted multi-pane grid.
 
-### Use the system SSH implementation
+The accepted split model is:
 
-GlassPort does not reimplement SSH.
+- one primary terminal;
+- one optional right-side companion;
+- both Sessions remain independently live;
+- the native divider is draggable;
+- closing the companion restores the primary terminal to the full tab surface.
 
-The app invokes `/usr/bin/ssh <alias>` through the same PTY/session architecture as the local shell. OpenSSH remains responsible for the security-sensitive parts it already handles well.
+This keeps the product focused on a main working context plus a secondary shell/SSH view instead of becoming another generic terminal multiplexer UI.
+
+## Durable intent, fresh processes
+
+GlassPort persists the user-visible layout without pretending that a process can be serialized.
+
+Persisted state can include:
+
+- Workspace metadata;
+- tab order and active tab;
+- main/companion pane identity;
+- semantic Local/SSH Port reference;
+- selected Local launch directory.
+
+It deliberately does **not** persist:
+
+- live Session IDs;
+- PIDs or PTY state;
+- terminal scrollback;
+- remote working directory;
+- authentication state;
+- a claim that an old process is still running.
+
+On relaunch, GlassPort rebuilds fresh runtime Sessions from durable intent.
+
+## OpenSSH boundary
+
+GlassPort does not implement its own SSH protocol.
+
+The system OpenSSH client remains authoritative for:
+
+- authentication;
+- host-key handling;
+- `ssh_config`;
+- ProxyJump / proxy behavior;
+- agent and Keychain behavior;
+- connection diagnostics emitted by OpenSSH itself.
+
+GlassPort owns the native product shell, process/session lifecycle and sanitized presentation around that trusted system tool.
+
+## Current development frontier
+
+The following work is active in stacked/open PRs and is **not presented as merged product state**:
+
+- user-selectable terminal themes;
+- per-Workspace and per-Port visual identity;
+- native **⌘K Command Palette**;
+- workspace Quick Actions;
+- read-only SSH Connection Inspector based on `ssh -G`;
+- more truthful SSH exit/restart presentation;
+- sanitized local SSH-agent / Keychain-related diagnostics;
+- managed localhost SSH tunnels.
+
+These slices remain behind Mac build/test, privacy/security and/or physical UI acceptance gates before they can join the accepted baseline.
+
+## Engineering principles
+
+### Use the platform and trusted system tools
+
+SwiftTerm renders terminals. PTYs own actual local processes. System OpenSSH owns SSH protocol/security behavior. GlassPort does not duplicate those responsibilities merely to look integrated.
 
 ### Persist intent, not runtime machinery
 
-Durable state currently stores Workspace identity and selection.
+Durable UI/product state and ephemeral process state are intentionally different models.
 
-Live Sessions, PTYs, terminal scrollback, SSH credentials, resolved connection options, and process state remain runtime-only. Relaunch reconstructs a safe runtime from durable intent instead of attempting to serialize live process state.
+### Truthful runtime status
 
-### Lazy remote sessions
+A running OpenSSH process is not automatically a verified authenticated remote connection. Exit code 255 is not automatically a specific network/password/host-key diagnosis. Product copy should expose what is actually known.
 
-Discovered SSH Ports are visible without opening network connections. A real SSH Session is created only when the user explicitly selects that Port.
+### Physical validation matters
 
-### Validate the actual product
-
-Build success is necessary but not sufficient. Terminal focus, native commands, resize, shell exit/restart, real SSH interaction, process cleanup, and persistence behavior have been validated at the native app/runtime level.
-
-## Product direction
-
-The near-term product direction remains:
-
-- workspace-first navigation;
-- local shell and SSH as equal Port types;
-- tabs and split panes;
-- per-session working directory;
-- Quick Actions;
-- Command Palette;
-- appropriate Keychain usage;
-- native macOS interaction and visual polish.
-
-GlassPort is intentionally **not** trying to become an RDP/VNC client, Kubernetes dashboard, Docker management suite, or AI chat application in its first product version.
+Terminal focus, resize, copy/paste, shell exit/restart, SSH behavior, split panes, quit/relaunch restoration and Light/Dark appearance require real macOS product validation in addition to tests.
 
 ## Technology
 
@@ -87,20 +138,22 @@ Swift · AppKit · SwiftTerm · PTY/process lifecycle · OpenSSH · Foundation p
 
 ## What this project demonstrates
 
-GlassPort combines product and systems concerns in one native application:
+GlassPort combines product, native UI and systems concerns:
 
 - developer-tool product design;
-- process and terminal lifecycle;
-- native macOS/AppKit work;
+- AppKit architecture;
+- terminal/PTTY lifecycle;
 - trusted system-tool integration;
-- local persistence contracts;
-- failure and corruption handling;
-- testable runtime boundaries;
-- physical-product validation.
+- durable/ephemeral state separation;
+- layout restoration and migration;
+- failure-safe persistence;
+- native keyboard and interaction design;
+- testable security/privacy boundaries;
+- physical macOS validation.
 
 ## Public boundary
 
-The implementation repository remains private while the product evolves. This repository documents architecture, verified behavior, product decisions, and sanitized evidence without publishing private host configuration, credentials, or operational details.
+The implementation repository remains private while the product evolves. This showcase documents architecture, verified behavior, current limitations and sanitized evidence without exposing private SSH aliases, host details, credentials, paths or operational configuration.
 
 ## Related work
 
