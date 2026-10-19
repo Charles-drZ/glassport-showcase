@@ -2,6 +2,8 @@
 
 **A native macOS workspace for local and remote development environments.**
 
+**Focus:** Swift · AppKit · native macOS · terminal/PTY lifecycle · OpenSSH · persistence · developer tools
+
 GlassPort is a workspace-first developer tool. Instead of organizing work around disconnected terminal windows and SSH connections, it groups local shells, remote systems, tabs, live terminal sessions and project context around the workspace they belong to.
 
 The practical product goal is still the same: replace a fragmented Royal TSX + Terminal workflow with a native macOS tool that is simpler, more coherent, and designed around real daily development work.
@@ -154,6 +156,16 @@ GlassPort combines product, native UI and systems concerns:
 ## Public boundary
 
 The implementation repository remains private while the product evolves. This showcase documents architecture, verified behavior, current limitations and sanitized evidence without exposing private SSH aliases, host details, credentials, paths or operational configuration.
+
+## Engineering note
+
+**[Durable intent is not runtime state →](https://github.com/Charles-drZ/Charles-drZ/blob/main/engineering-notes/glassport-durable-intent-vs-runtime-state.md)**
+
+A short write-up on why GlassPort persists workspace intent while rebuilding PTYs, processes and SSH Sessions after relaunch.
+
+## Follow the work
+
+For accepted milestones, new public case studies and short engineering notes, follow **[@Charles-drZ](https://github.com/Charles-drZ)**.
 
 ## Related work
 
