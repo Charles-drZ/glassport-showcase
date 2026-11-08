@@ -10,6 +10,24 @@ GlassPort organizes local and remote development around persistent Workspaces, s
 
 The implementation is private. This showcase describes the accepted native macOS foundation, important engineering decisions and current limitations.
 
+## Real macOS application screenshots
+
+These captures show GlassPort running on macOS on **November 8, 2026**. They are real application screenshots, not generated mockups or independently reproducible source-code evidence.
+
+**01 — Workspace overview.** The AppKit workspace sidebar, local shell, discovered ports, and tab layout.
+
+<a href="assets/visuals/glassport-workspace-overview.webp"><img src="assets/visuals/glassport-workspace-overview.webp" alt="GlassPort workspace sidebar, Local Shell tab, and terminal" width="900"></a>
+
+**02 — Remote SSH terminal.** An interactive Raspberry Pi SSH session with command output.
+
+<a href="assets/visuals/glassport-ssh-terminal.webp"><img src="assets/visuals/glassport-ssh-terminal.webp" alt="GlassPort SSH terminal showing a Raspberry Pi session" width="900"></a>
+
+**03 — Companion split.** One tab displays **two independent Local Shell sessions**. The split action duplicates the current Port; this is **not** a mixed Local/SSH split.
+
+<a href="assets/visuals/glassport-companion-split.webp"><img src="assets/visuals/glassport-companion-split.webp" alt="GlassPort split pane with two separate Local Shell sessions" width="900"></a>
+
+Screenshots illustrate visible product behavior, not a release claim or complete QA acceptance.
+
 ## Product experience
 
 The accepted product includes:
@@ -33,7 +51,7 @@ A Workspace's layout, selected tab and semantic Port can survive application res
 
 The accepted foundation was exercised through native Mac build/test and physical product review. Public source code and test logs are **not available** in this showcase, and later stacked/draft work is not presented as merged functionality.
 
-**Real macOS screenshots are still missing.** The planned capture set is Workspace navigation, a sanitized local/SSH terminal, and the independently live companion split. No generated mockup is being presented as a real product screenshot.
+**Three real macOS application screenshots are now included above:** Workspace, an interactive SSH session, and two independent Local Shell sessions in a companion split. The images do not claim mixed-Port splitting, a public release, or complete product acceptance.
 
 [Read the validation and publication boundaries →](docs/validation-and-status.md)
 
