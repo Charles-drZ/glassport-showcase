@@ -14,15 +14,15 @@ Later work on terminal themes, command palette, workspace quick actions, SSH con
 
 The dated state of the private repository can change more quickly than these public notes. A new claim should be checked against the latest accepted branch, relevant tests and real Mac interaction evidence before publication.
 
-## Visual evidence still required
+## Published macOS product screenshots
 
-The repository does not yet include a privacy-reviewed, real GlassPort screenshot set. Three useful future captures are:
+The [public README](../README.md) includes three real macOS application screenshots:
 
-1. **Workspace navigation:** real AppKit workspace and tab arrangement.
-2. **Local/SSH Session:** a working terminal with completely sanitized host and path details.
-3. **Companion split:** one primary and one independent right-side terminal.
+1. **Workspace overview:** sidebar, tabs, Local Shell, and visible Port list.
+2. **SSH terminal:** an interactive Raspberry Pi remote session.
+3. **Companion split:** two independent Local Shell sessions attached to the same Port.
 
-These are **capture requirements**, not produced assets. Only screenshots of an actually accepted build should be published. Synthetic mockups cannot be described as product captures.
+The current split action creates a new Session for the current Port. It does not demonstrate a Local Shell + SSH mixed-Port split. The screenshots show visible interaction, not full release or QA acceptance. No generated mockups are used as application captures.
 
 ## Public boundary
 

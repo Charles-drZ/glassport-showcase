@@ -79,7 +79,7 @@ The accepted Workspace persistence work included native macOS build/test and phy
 
 No restored tab should be described as a surviving PTY. No new command palette, theme picker, SSH diagnostics, tunnels or skill-driven agent execution is presented as accepted unless separately merged and validated.
 
-**Visual evidence:** no privacy-reviewed macOS application screenshots are published in this repository yet. Future captures must come from a real accepted build and remove hostnames, user paths, credentials and private terminal contents.
+**Visual evidence:** the [public showcase](../README.md) includes three real macOS application screenshots: Workspace overview, SSH terminal, and two Local Shell sessions in a companion split. These illustrate visible UI behavior; no mixed-Port split or public release is claimed.
 
 ---
 
