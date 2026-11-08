@@ -167,9 +167,14 @@ A short write-up on why GlassPort persists workspace intent while rebuilding PTY
 
 For accepted milestones, new public case studies and short engineering notes, follow **[@Charles-drZ](https://github.com/Charles-drZ)**.
 
-## Related work
+## Related Apple-platform work
 
-- [Developer profile](https://github.com/Charles-drZ)
+- [Developer profile — Apple platform development](https://github.com/Charles-drZ)
+- [GlassBox — iOS / watchOS product](https://github.com/Charles-drZ/glassbox-showcase)
+- [Skill-guided Apple development workflow](https://github.com/Charles-drZ/glassbox-development-workflow/blob/main/docs/skill-guided-apple-development.md)
+
+## Other engineering work
+
 - [Glassoft Agent Runtime](https://github.com/Charles-drZ/glassoft-agent-runtime-showcase)
 - [NodeMedic](https://github.com/Charles-drZ/nodemedic-showcase)
 - [Raspberry Home](https://github.com/Charles-drZ/raspberry-home-showcase)
