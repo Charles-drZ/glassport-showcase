@@ -75,7 +75,7 @@ System OpenSSH stays authoritative for SSH configuration, authentication, host k
 
 ## Validation and limits
 
-The accepted Workspace persistence work included native macOS build/test and physical product review. The private implementation has migration and restoration tests, but this public showcase does not publish their source or logs. The public note is therefore **an engineering explanation, not independently executable code evidence**.
+The accepted Workspace persistence work included native macOS build/test and physical product review. The private implementation has migration and restoration tests, but this showcase does not publish their source or logs. The separate [CompanionLayoutCore public example](../samples/CompanionLayoutCore/) is an independently written, executable illustration of bounded pane state and durable intent, **not** the production implementation or its test evidence.
 
 No restored tab should be described as a surviving PTY. No new command palette, theme picker, SSH diagnostics, tunnels or skill-driven agent execution is presented as accepted unless separately merged and validated.
 
