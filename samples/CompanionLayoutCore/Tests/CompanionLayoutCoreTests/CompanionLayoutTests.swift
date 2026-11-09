@@ -67,14 +67,16 @@ struct CompanionLayoutTests {
     @Test func focusRejectsUnknownPaneWithoutMutation() {
         var (layout, _) = fixture()
         let before = layout
-        #expect(!layout.focus(UUID()))
+        let accepted = layout.focus(UUID())
+        #expect(!accepted)
         #expect(layout == before)
     }
 
     @Test func focusCanReturnToOriginalPane() {
         var (layout, first) = fixture()
         #expect(layout.split(from: first.id, newPaneID: UUID(), newRuntimeToken: UUID()) == .added)
-        #expect(layout.focus(first.id))
+        let accepted = layout.focus(first.id)
+        #expect(accepted)
         #expect(layout.focusedPaneID == first.id)
     }
 
@@ -91,7 +93,8 @@ struct CompanionLayoutTests {
         var (layout, first) = fixture()
         let companion = UUID()
         #expect(layout.split(from: first.id, newPaneID: companion, newRuntimeToken: UUID()) == .added)
-        #expect(layout.focus(first.id))
+        let accepted = layout.focus(first.id)
+        #expect(accepted)
         #expect(layout.close(first.id) == .removedPane)
         #expect(layout.panes.map(\.id) == [companion])
         #expect(layout.focusedPaneID == companion)
