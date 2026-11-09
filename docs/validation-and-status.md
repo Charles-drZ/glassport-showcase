@@ -24,6 +24,12 @@ The [public README](../README.md) includes three real macOS application screensh
 
 The current split action creates a new Session for the current Port. It does not demonstrate a Local Shell + SSH mixed-Port split. The screenshots show visible interaction, not full release or QA acceptance. No generated mockups are used as application captures.
 
+## Independently runnable Swift example
+
+[CompanionLayoutCore](../samples/CompanionLayoutCore/) is a new Swift Package demonstrating general companion-pane state transitions and distinguishing a saved layout description from ephemeral runtime identity. It includes its own Swift Testing suite and GitHub-hosted macOS validation workflow. **Its tests do not replace or establish the private GlassPort's XCTest, AppKit or physical-device validation.** The package does not create terminals, connect to SSH or handle user data.
+
+The [public source boundary](public-source-boundary.md) distinguishes this independently authored sample from the application's private implementation.
+
 ## Public boundary
 
 The implementation repo remains private. Do not publish real SSH aliases, hostnames, network details, credentials, complete shell history, sensitive paths, private diffs or internal log contents.

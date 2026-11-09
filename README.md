@@ -8,7 +8,7 @@
 
 GlassPort organizes local and remote development around persistent Workspaces, semantic Ports and live terminal Sessions — instead of a collection of unrelated windows.
 
-The implementation is private. This showcase describes the accepted native macOS foundation, important engineering decisions and current limitations.
+The application implementation remains private. This showcase describes the accepted macOS foundation, engineering decisions and limitations, alongside one **independently authored** runnable Swift example that is not extracted from the application.
 
 ## Real macOS application screenshots
 
@@ -49,11 +49,21 @@ A Workspace's layout, selected tab and semantic Port can survive application res
 
 ## Validation and limits
 
-The accepted foundation was exercised through native Mac build/test and physical product review. Public source code and test logs are **not available** in this showcase, and later stacked/draft work is not presented as merged functionality.
+The accepted foundation was exercised through native Mac build/test and physical product review. The private application's source and test logs are **not** published; the standalone public example below is separate from that validation. Later stacked/draft work is not presented as merged functionality.
 
 **Three real macOS application screenshots are now included above:** Workspace, an interactive SSH session, and two independent Local Shell sessions in a companion split. The images do not claim mixed-Port splitting, a public release, or complete product acceptance.
 
 [Read the validation and publication boundaries →](docs/validation-and-status.md)
+
+## Runnable Swift engineering example
+
+**[CompanionLayoutCore](samples/CompanionLayoutCore/)** is a small, dependency-free Swift Package that demonstrates a two-pane layout state machine: separate runtime identities, same-target companion creation, bounded capacity, focus, closure and saved intent without process state. Its **16 Swift Testing cases** exercise the public example, not the private GlassPort implementation.
+
+```sh
+swift test --package-path samples/CompanionLayoutCore
+```
+
+This code is newly written for public demonstration. It does not contain copied private source, real SSH aliases, AppKit/SwiftTerm implementation, process management or the production persistence schema. See the [scope and limits](samples/CompanionLayoutCore/README.md) and [publication boundary](docs/public-source-boundary.md).
 
 ## Current development direction
 

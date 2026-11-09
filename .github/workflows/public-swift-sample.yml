@@ -1,0 +1,70 @@
+name: Public Swift sample validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  public-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Limit source to the reviewed standalone sample
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          expected="$(printf '%s\n' \
+            'samples/CompanionLayoutCore/Package.swift' \
+            'samples/CompanionLayoutCore/Sources/CompanionLayoutCore/CompanionLayout.swift' \
+            'samples/CompanionLayoutCore/Tests/CompanionLayoutCoreTests/CompanionLayoutTests.swift' | sort)"
+          actual="$(git ls-files '*.swift' | sort)"
+          if [[ "$actual" != "$expected" ]]; then
+            echo "Unexpected Swift source in public showcase" >&2
+            printf 'Tracked files:\n%s\n' "$actual" >&2
+            exit 1
+          fi
+
+      - name: Reject private application and runtime artifacts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          forbidden='(^|/)(\.env|secrets\.yaml|\.storage)(/|$)|\.(pbxproj|xcconfig|entitlements|storekit|plist|xcscheme|xcworkspacedata|db|sqlite|sqlite3|key|pem|p8|p12|pfx|mobileprovision|xcresult|zip|tar|tgz|gz|diff|patch)$'
+          if git ls-files | grep -Ei "$forbidden"; then
+            echo "Private or runtime artifact found in public showcase" >&2
+            exit 1
+          fi
+
+      - name: Reject sensitive content and project identifiers
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          patterns='BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY|github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+|sk-[A-Za-z0-9]{20,}|Authorization:[[:space:]]*Bearer[[:space:]]+[A-Za-z0-9._-]+|GLP-[0-9]+|000081[0-9A-Fa-f]{2}-[0-9A-Fa-f]{16}'
+          if git grep -nE "$patterns" -- .; then
+            echo "Potential secret or internal identifier found" >&2
+            exit 1
+          fi
+
+      - name: Keep sample independent of private Apple frameworks
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          patterns='^[[:space:]]*import[[:space:]]+(AppKit|SwiftUI|SwiftData|CloudKit|StoreKit|HealthKit|SwiftTerm|Darwin)([[:space:]]|$)'
+          if git grep -nE "$patterns" -- 'samples/CompanionLayoutCore/*.swift' 'samples/CompanionLayoutCore/**/*.swift'; then
+            echo "Unexpected private-app implementation dependency" >&2
+            exit 1
+          fi
+
+  swift-testing:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift toolchain
+        run: swift --version
+      - name: Execute standalone Swift package tests
+        run: swift test --package-path samples/CompanionLayoutCore
