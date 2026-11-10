@@ -14,7 +14,7 @@ GlassPort is an independent product with a private implementation. This showcase
 
 ## Allowed public example
 
-The `samples/CompanionLayoutCore/` package is newly authored and deliberately limited to generic Swift value types, state transitions, and illustrative tests. It does not reproduce GlassPort's private data models, renderer or persistence schema. Passing its tests proves only the standalone example.
+The `samples/CompanionLayoutCore/` and `samples/WorkspaceRestoreCore/` packages are separately authored demonstrations. The latter uses deliberately different JSON fields and layout roles from the private storage schema. Neither reproduces private data models, AppKit rendering, SSH lifecycle or production tests. Passing their tests proves only the standalone examples.
 
 The companion-split behavior is already publicly described in the [architecture note](native-workspace-architecture.md) and visible in accepted screenshots. Publishing an illustration of that general idea is not permission to disclose the private implementation.
 
