@@ -21,7 +21,10 @@ jobs:
           expected="$(printf '%s\n' \
             'samples/CompanionLayoutCore/Package.swift' \
             'samples/CompanionLayoutCore/Sources/CompanionLayoutCore/CompanionLayout.swift' \
-            'samples/CompanionLayoutCore/Tests/CompanionLayoutCoreTests/CompanionLayoutTests.swift' | sort)"
+            'samples/CompanionLayoutCore/Tests/CompanionLayoutCoreTests/CompanionLayoutTests.swift' \
+            'samples/WorkspaceRestoreCore/Package.swift' \
+            'samples/WorkspaceRestoreCore/Sources/WorkspaceRestoreCore/RestorePlanner.swift' \
+            'samples/WorkspaceRestoreCore/Tests/WorkspaceRestoreCoreTests/RestorePlannerTests.swift' | sort)"
           actual="$(git ls-files '*.swift' | sort)"
           if [[ "$actual" != "$expected" ]]; then
             echo "Unexpected Swift source in public showcase" >&2
@@ -54,7 +57,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           patterns='^[[:space:]]*import[[:space:]]+(AppKit|SwiftUI|SwiftData|CloudKit|StoreKit|HealthKit|SwiftTerm|Darwin)([[:space:]]|$)'
-          if git grep -nE "$patterns" -- 'samples/CompanionLayoutCore/*.swift' 'samples/CompanionLayoutCore/**/*.swift'; then
+          if git grep -nE "$patterns" -- '*.swift'; then
             echo "Unexpected private-app implementation dependency" >&2
             exit 1
           fi
@@ -66,5 +69,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Swift toolchain
         run: swift --version
-      - name: Execute standalone Swift package tests
+      - name: Verify CompanionLayoutCore
         run: swift test --package-path samples/CompanionLayoutCore
+      - name: Verify WorkspaceRestoreCore
+        run: swift test --package-path samples/WorkspaceRestoreCore

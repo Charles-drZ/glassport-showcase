@@ -65,6 +65,16 @@ swift test --package-path samples/CompanionLayoutCore
 
 This code is newly written for public demonstration. It does not contain copied private source, real SSH aliases, AppKit/SwiftTerm implementation, process management or the production persistence schema. See the [scope and limits](samples/CompanionLayoutCore/README.md) and [publication boundary](docs/public-source-boundary.md).
 
+## Second runnable Swift example: Workspace restoration
+
+**[WorkspaceRestoreCore](samples/WorkspaceRestoreCore/)** illustrates versioned `Codable` data, migration, recoverable layout corruption and the separation of saved user intent from running process state. It uses a distinct, invented JSON format and original Swift Testing cases — **not** the private application's persistence code or production tests.
+
+```sh
+swift test --package-path samples/WorkspaceRestoreCore
+```
+
+See the [example's scope](samples/WorkspaceRestoreCore/README.md) and the [publication boundary](docs/public-source-boundary.md).
+
 ## Current development direction
 
 User-selectable themes, a native command palette, SSH diagnostics and managed tunnels are areas of ongoing development or qualification. Their existence in private branches does not imply Product acceptance, release or safe unattended operation.

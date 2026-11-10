@@ -30,6 +30,10 @@ The current split action creates a new Session for the current Port. It does not
 
 The [public source boundary](public-source-boundary.md) distinguishes this independently authored sample from the application's private implementation.
 
+## Second public Swift example
+
+[WorkspaceRestoreCore](../samples/WorkspaceRestoreCore/) independently illustrates safe decoding, in-memory revision upgrade, invalid-layout isolation and saved-intent boundaries. Its `Codable` fields are **not** GlassPort's production storage schema, and its Swift Testing suite does not establish production restore correctness.
+
 ## Public boundary
 
 The implementation repo remains private. Do not publish real SSH aliases, hostnames, network details, credentials, complete shell history, sensitive paths, private diffs or internal log contents.
