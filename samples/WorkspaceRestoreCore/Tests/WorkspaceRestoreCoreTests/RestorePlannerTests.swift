@@ -112,16 +112,41 @@ struct RestorePlannerTests {
         #expect(report.skippedCanvasIDs == [id])
     }
 
-    @Test func invalidRolesInvalidateCanvas() throws {
-        let id = UUID()
+    @Test func invalidRolesInvalidateCanvasEvenWithValidFocus() throws {
+        let id = UUID(), onlyTile = UUID()
         let payload: [String: Any] = [
-            "tiles": [["id": UUID().uuidString, "role": "companion"]],
-            "focusedTileID": UUID().uuidString
+            "tiles": [["id": onlyTile.uuidString, "role": "companion"]],
+            "focusedTileID": onlyTile.uuidString
         ]
         let report = try RestorePlanner.restore(data(
             spaces: [space(id, canvas: payload)], selected: id
         ))
         #expect(report.skippedCanvasIDs == [id])
+    }
+
+    @Test func unknownTileRoleIsIsolatedAsMalformedCanvas() throws {
+        let id = UUID(), tile = UUID()
+        let payload: [String: Any] = [
+            "tiles": [["id": tile.uuidString, "role": "unknown-role"]],
+            "focusedTileID": tile.uuidString
+        ]
+        let report = try RestorePlanner.restore(data(
+            spaces: [space(id, title: "Retain Name", canvas: payload)], selected: id
+        ))
+        #expect(report.document.spaces[0].title == "Retain Name")
+        #expect(report.document.spaces[0].canvas == nil)
+        #expect(report.skippedCanvasIDs == [id])
+    }
+
+    @Test func explicitlyNullCanvasIsNotReportedAsCorruption() throws {
+        let id = UUID()
+        var record = space(id)
+        record["canvas"] = NSNull()
+        let report = try RestorePlanner.restore(data(
+            spaces: [record], selected: id
+        ))
+        #expect(report.document.spaces[0].canvas == nil)
+        #expect(report.skippedCanvasIDs.isEmpty)
     }
 
     @Test func damagedCanvasDoesNotDamageAnotherWorkspace() throws {
